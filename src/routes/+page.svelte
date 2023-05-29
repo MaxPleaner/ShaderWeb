@@ -613,6 +613,7 @@
 </container>
 
 <style>
+
   .hidden {
     display: none;
   }
@@ -631,5 +632,187 @@
 
   .nav-btn.selected {
     outline: 3px solid lightblue;
+  }
+
+
+  #page {
+    background: #000;
+  }
+
+  #login {
+    border: none;
+    padding: 7px 20px;
+    font-weight: 300;
+    font-size: 18px;
+    background-color: #205fbd;
+    color: #fff;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+
+  .nav-btn {
+    border: none;
+    padding: 3px 7px;
+    margin-bottom: 10px;
+    font-weight: 400;
+    font-size: 14px;
+    background-color: #205fbd;
+    color: #fff;
+    border-radius: 3px;
+    cursor: pointer;
+    margin-right: 10px; 
+  }
+
+  #canvas {
+  margin-bottom: 20px;
+  }
+
+  #editorWrapper {
+  background-color: #fff;
+  }
+
+  @media screen and (min-width: 375px) {
+  .nav-btn {
+    padding: 5px 10px;
+    margin-bottom: 10px;
+    font-weight: 400;
+    font-size: 16px;
+    border-radius: 5px;
+  }
+
+  
+
+  input[type=text] {
+    width: 200px;
+    height: 35px;
+    border: none;
+    border-radius: 5px;
+    background-color: #131414;
+    color: #fff;
+    padding: 0 5px;
+    margin-right: 20px;
+  }
+
+  input[type=text]:focus {
+    outline: 1px solid #4f5252;
+  }
+
+  #update,
+  #save,
+  #delete {
+    border: none;
+    padding: 5px 10px;
+    font-weight: 400;
+    font-size: 16px;
+    background-color: #205fbd;
+    color: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 10px;
+  }
+
+  label {
+    color: #fff;
+    margin:10px 8px;
+    display: inline-block;
+    font-family: arial, san-serif;
+}
+
+  a {
+    display: inline-block;
+    color: #205fbd;
+    margin-left: 8px;
+    font-weight: bold;
+  }
+
+  #params {
+    color: #fff;
+    margin-left: 8px;
+    text-transform: uppercase;
+    text-decoration: underline;
+  }
+
+  #params p {
+    font-size: 18px;
+    font-family: arial, san-serif;
+  }
+
+  .add-param {
+    border: none;
+    padding: 3px 6px;
+    font-weight: 400;
+    font-size: 14px;
+    background-color: #205fbd;
+    color: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 10px;
+  }
+
+  .type-select {
+    height: 30px;
+    border: none;
+    border-radius: 5px;
+    background-color: #131414;
+    color: #fff;
+  }
+
+  .small-number-input {
+    height: 30px;
+    width: 60px;
+    border: none;
+    border-radius: 5px;
+    background-color: #131414;
+    color: #fff;
+  }
+
+  .delete-param {
+    border: none;
+    padding: 5px 10px;
+    font-weight: 400;
+    font-size: 16px;
+    background-color: #205fbd;
+    color: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  #templateShadersTab li{
+    list-style: none;
+  }
+
+  #templateShadersTab li > button {
+    border: none;
+    outline: none;
+    padding: 8px 10px;
+    font-size: 16px;
+    background-color: #205fbd;
+    color: #fff;
+    margin: 3px 0;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+
+  #userShadersTab p {
+    font-size: 16px;
+    color: #fff;
+    font-family: arial, san-serif;
+  }
+
+  #discoverShadersTab li {
+    list-style: none;
+  }
+
+  #discoverShadersTab li > button {
+    border: none;
+    outline: none;
+    padding: 8px 10px;
+    font-size: 16px;
+    background-color: #205fbd;
+    color: #fff;
+    margin: 3px 0;
+    border-radius: 3px;
+    cursor: pointer;
+  }
   }
 </style>

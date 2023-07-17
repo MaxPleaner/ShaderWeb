@@ -34,11 +34,15 @@
   p5Setup = (_pFive) =>
     pFive = _pFive
     pFive.setup = ->
-      canvas = pFive.createCanvas(710, 400, pFive.WEBGL)
+      aspect_ratio = [4, 3]
+      scale = 150
+      size = aspect_ratio.map (val) => val * scale
+
+      canvas = pFive.createCanvas(size[0], size[1], pFive.WEBGL)
       canvas.parent("canvas")
       pFive.noStroke()
       shaderState.cam = pFive.createCapture(pFive.VIDEO)
-      shaderState.cam.size(710, 400)
+      shaderState.cam.size(size[0], size[1])
       shaderState.cam.hide()
       shaderState.shaderObj = pFive.createShader(
         defaultVertShader,

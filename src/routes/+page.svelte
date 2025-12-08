@@ -613,6 +613,163 @@
 </container>
 
 <style>
+  :global(body) {
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background: #0a0a0a;
+    color: #e0e0e0;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  :global(#page) {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 16px;
+  }
+
+  :global(hr) {
+    border: none;
+    border-top: 1px solid #333;
+    margin: 16px 0;
+  }
+
+  :global(button) {
+    background: #1a1a1a;
+    color: #e0e0e0;
+    border: 1px solid #333;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: all 0.2s;
+  }
+
+  :global(button:hover) {
+    background: #2a2a2a;
+    border-color: #555;
+  }
+
+  :global(button:active) {
+    transform: translateY(1px);
+  }
+
+  :global(input[type="text"]),
+  :global(input[type="number"]),
+  :global(select) {
+    background: #1a1a1a;
+    color: #e0e0e0;
+    border: 1px solid #333;
+    padding: 6px 8px;
+    border-radius: 4px;
+    font-size: 13px;
+  }
+
+  :global(input[type="text"]:focus),
+  :global(input[type="number"]:focus),
+  :global(select:focus) {
+    outline: none;
+    border-color: #4a9eff;
+  }
+
+  :global(input[type="checkbox"]) {
+    accent-color: #4a9eff;
+  }
+
+  :global(a) {
+    color: #4a9eff;
+    text-decoration: none;
+  }
+
+  :global(a:hover) {
+    text-decoration: underline;
+  }
+
+  :global(#shader-name) {
+    width: 200px;
+    margin-right: 8px;
+  }
+
+  :global(#tab-nav) {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  :global(#canvas) {
+    border: 1px solid #333;
+    border-radius: 4px;
+    margin-bottom: 16px;
+    background: #000;
+  }
+
+  :global(#editorWrapper) {
+    border: 1px solid #333;
+    border-radius: 4px;
+    margin-top: 16px;
+    overflow: hidden;
+  }
+
+  :global(#params) {
+    background: #141414;
+    border: 1px solid #333;
+    border-radius: 4px;
+    padding: 12px;
+    margin-top: 16px;
+  }
+
+  :global(#params p) {
+    margin: 0 0 8px 0;
+    font-weight: 600;
+  }
+
+  :global(#params ol) {
+    margin: 12px 0 0 0;
+    padding-left: 20px;
+  }
+
+  :global(#params li) {
+    margin-bottom: 12px;
+    padding: 8px;
+    background: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 4px;
+  }
+
+  :global(.shaderParam input),
+  :global(.shaderParam select) {
+    margin-right: 6px;
+    margin-bottom: 4px;
+  }
+
+  :global(.shaderParam .paramName) {
+    width: 120px;
+    font-weight: 600;
+  }
+
+  :global(.float-param-slider) {
+    width: 150px;
+    vertical-align: middle;
+    margin-left: 8px;
+  }
+
+  :global(ul) {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  :global(ul li) {
+    margin-bottom: 8px;
+  }
+
+  :global(ul button) {
+    width: 100%;
+    text-align: left;
+    padding: 8px 12px;
+  }
+
   .hidden {
     display: none;
   }
@@ -622,14 +779,46 @@
   }
 
   .hidden.inline-block {
-    display: none
+    display: none;
   }
 
   .small-number-input {
-    width: 50px;
+    width: 60px;
+  }
+
+  .nav-btn {
+    flex: 1;
+    max-width: 200px;
   }
 
   .nav-btn.selected {
-    outline: 3px solid lightblue;
+    background: #2a2a2a;
+    border-color: #4a9eff;
+    color: #4a9eff;
+  }
+
+  :global(#login),
+  :global(#logout) {
+    margin-left: 8px;
+  }
+
+  :global(.cm-editor) {
+    background: #1a1a1a;
+  }
+
+  :global(.add-param),
+  :global(.delete-param) {
+    font-size: 12px;
+    padding: 4px 8px;
+  }
+
+  :global(.delete-param) {
+    background: #2a1a1a;
+    border-color: #553333;
+  }
+
+  :global(.delete-param:hover) {
+    background: #3a1a1a;
+    border-color: #773333;
   }
 </style>

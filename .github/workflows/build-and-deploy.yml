@@ -1,5 +1,6 @@
 name: Build and Deploy to GitHub Pages
 
+# Automated build and deployment workflow
 on:
   push:
     branches: [master]

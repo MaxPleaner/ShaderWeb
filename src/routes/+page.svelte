@@ -714,6 +714,15 @@
     :global(#page) {
       padding: 10px;
     }
+
+    :global(.control-panel) {
+      width: 100% !important;
+      max-width: 100% !important;
+    }
+
+    :global(#canvas) {
+      max-width: 100%;
+    }
   }
 
   :global(hr) {
@@ -758,6 +767,33 @@
 
     :global(#params li) {
       padding: 12px;
+    }
+
+    :global(.shaderParam) {
+      gap: 6px;
+    }
+
+    :global(.shaderParam input),
+    :global(.shaderParam select) {
+      font-size: 13px;
+      padding: 6px 8px;
+    }
+
+    :global(.shaderParam .paramName) {
+      width: 120px;
+    }
+
+    :global(.shaderParam .type-select) {
+      width: 90px;
+    }
+
+    :global(.float-param-slider) {
+      width: 100%;
+      min-width: 150px;
+    }
+
+    :global(.param-group) {
+      gap: 4px;
     }
   }
 

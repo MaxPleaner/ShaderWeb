@@ -350,47 +350,67 @@
 </script>
 <container id="page">
 
-  <!-- ACCOUNTS STUFF -->
-  {#if firebaseState.user}
-    <span>Logged in as {firebaseState.user.email}</span>
-    <button on:click={initLogout} id="logout">Logout</button>
-  {:else}
-    <button on:click={initLogin} id="login">Login</button>
-  {/if}
-  <hr>
-
-  <!-- NAV BUTTONS -->
+  <!-- NAV BUTTONS AND LOGIN -->
   <div id="tab-nav">
     <button class="nav-btn selected" on:click={switchTab} data-tab="cameraTab">Camera</button>
     <button class="nav-btn" on:click={switchTab} data-tab="templateShadersTab">Template Shaders</button>
     <button class="nav-btn" on:click={switchTab} data-tab="userShadersTab">My Shaders</button>
     <button class="nav-btn" on:click={switchTab} data-tab="discoverShadersTab">Discover Shaders</button>
+    <button class="nav-btn" on:click={switchTab} data-tab="aboutTab">About</button>
+    {#if firebaseState.user}
+      <button class="nav-btn" on:click={initLogout} id="logout">Logout ({firebaseState.user.email})</button>
+    {:else}
+      <button class="nav-btn" on:click={initLogin} id="login">Login</button>
+    {/if}
   </div>
-  <hr>
 
   <div id="tabs">
 
     <!-- CAMERA VIEW -->
     <div class="tab hidden" id="cameraTab">
       <div id="canvas"></div>
-      <input id="shader-name" type="text" placeholder="Shader name" />
-      <button on:click={updateButtonClick} id="update">Update Preview</button>
-      <button on:click={saveButtonClick} id="save">Save</button>
-      <button on:click={deleteButtonClick} id="delete">Delete</button>
-      <br>
-      <label for="isPublic">Public</label>
-      <input type="checkbox" id="isPublic" checked={isShaderPublic} value="Public" />
-      {#if firebaseState.isAdmin}
-        <label for="isTemplate">Template</label>
-        <input type="checkbox" id="isTemplate" value="Template" />
-      {/if}
-      <br>
-      <a href="#" on:click={clearShaderOnClick}>Clear Active Shader</a>
+
+      <!-- Shader Metadata Section -->
+      <div class="control-panel">
+        <div class="panel-content">
+          <div class="form-row">
+            <label for="shader-name">Name</label>
+            <input id="shader-name" type="text" placeholder="Enter shader name" />
+            <div class="checkbox-group">
+              <label>
+                <input type="checkbox" id="isPublic" checked={isShaderPublic} value="Public" />
+                <span>Public</span>
+              </label>
+              {#if firebaseState.isAdmin}
+                <label>
+                  <input type="checkbox" id="isTemplate" value="Template" />
+                  <span>Template</span>
+                </label>
+              {/if}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons Section -->
+      <div class="control-panel">
+        <div class="panel-content">
+          <div class="button-row">
+            <button on:click={updateButtonClick} id="update">Update Preview</button>
+            <button on:click={saveButtonClick} id="save">Save Shader</button>
+            <button on:click={deleteButtonClick} id="delete">Delete Shader</button>
+            <button on:click={clearShaderOnClick} id="clear">Clear Shader</button>
+          </div>
+        </div>
+      </div>
       <!-- EDITOR -->
-      <div id="params">
+      <div id="params" class="control-panel">
         <!-- PARAM EDITOR -->
-        <p>Parameters</p>
-        <button on:click={addParam} class="add-param">Add Parameter</button>
+        <div class="panel-content">
+          <div class="param-header-row">
+            <button on:click={addParam}>Add Parameter</button>
+            <span class="param-description">Auto-defines a uniform in the shader</span>
+          </div>
         <ol>
           {#each params as param}
             <li
@@ -425,74 +445,73 @@
                   selected={param.type.split(".").slice(-1)[0] == "BooleanShaderParam"}
                 >Boolean</option>
               </select>
-              <div
-                class={`shaderOptions inline-block ${param.type.includes("TextureShaderParam") ? "" : "hidden"}`}
-                data-param-type="TextureShaderParam"
-              >
-                <b>Value:
+
+              {#if param.type.includes("TextureShaderParam")}
+                <span class="param-group">
+                  <span class="param-label">Value:</span>
                   <input
                     class="texture-param-val-direct-set small-number-input"
                     type="text"
                     value={param.default || ""}
                     on:input={textureParamDirectSet}
                   />
-                </b>
-                <b>Default:
+                </span>
+                <span class="param-group">
+                  <span class="param-label">Default:</span>
                   <input
                     class="texture-param-default small-number-input"
                     type="text"
                     value={param.default || ""}
                     on:input={textureParamDefaultChanged}
                   />
-                </b>
-              </div>
-              <div
-                class={`shaderOptions inline-block ${param.type.includes("BooleanShaderParam") ? "" : "hidden"}`}
-                data-param-type="BooleanShaderParam"
-              >
-                <b>Value:
+                </span>
+              {/if}
+
+              {#if param.type.includes("BooleanShaderParam")}
+                <span class="param-group">
+                  <span class="param-label">Value:</span>
                   <input
-                    class="boolean-param-val-direct-set small-number-input"
+                    class="boolean-param-val-direct-set"
                     type="checkbox"
                     checked={param.default || false}
                     on:input={booleanParamDirectSet}
                   />
-                </b>
-                <b>Default:
+                </span>
+                <span class="param-group">
+                  <span class="param-label">Default:</span>
                   <input
-                    class="boolean-param-default small-number-input"
+                    class="boolean-param-default"
                     type="checkbox"
                     checked={param.default}
                     on:input={booleanParamDefaultChanged}
                   />
-                </b>
-              </div>
-              <div
-                class={`shaderOptions inline-block ${param.type.includes("ColorShaderParam") ? "" : "hidden"}`}
-                data-param-type="ColorShaderParam"
-              >
-                <b>Value:
+                </span>
+              {/if}
+
+              {#if param.type.includes("ColorShaderParam")}
+                <span class="param-group">
+                  <span class="param-label">Value:</span>
                   <input
                     class="color-picker color-param-val-direct-set small-number-input"
                     type="text"
                     value={param.default || ""}
                     on:input={colorParamDirectSet}
                   />
-                </b>
-                <b>Default:
+                </span>
+                <span class="param-group">
+                  <span class="param-label">Default:</span>
                   <input
                     class="color-picker color-param-default small-number-input"
                     type="text"
                     value={param.default || ""}
                     on:input={colorParamDefaultChanged}
                   />
-                </b>
-              </div>
-              <div
-                class={`shaderOptions inline-block ${param.type.includes("FloatShaderParam") ? "" : "hidden"}`}
-                data-param-type="FloatShaderParam"
-              >
-                <b>Value:
+                </span>
+              {/if}
+
+              {#if param.type.includes("FloatShaderParam")}
+                <span class="param-group">
+                  <span class="param-label">Value:</span>
                   <input
                     class="float-param-val-direct-set small-number-input"
                     type="number"
@@ -500,8 +519,9 @@
                     value={param.type.includes("FloatShaderParam") ? (param.default || 0.5) : 0.5}
                     on:change={floatParamDirectSet}
                   />
-                </b>
-                <b>Default:
+                </span>
+                <span class="param-group">
+                  <span class="param-label">Default:</span>
                   <input
                     class="float-param-default small-number-input"
                     type="number"
@@ -509,8 +529,9 @@
                     value={param.type.includes("FloatShaderParam") ? (param.default || 0.5) : 0.5}
                     on:change={floatParamDefaultChanged}
                   />
-                </b>
-                <b>Min:
+                </span>
+                <span class="param-group">
+                  <span class="param-label">Min:</span>
                   <input
                     class="float-param-min small-number-input"
                     type="number"
@@ -518,8 +539,9 @@
                     value={param.type.includes("FloatShaderParam") ? (param.min || 0.0) : 0.0}
                     on:change={floatParamMinChanged}
                   />
-                </b>
-                <b>Max:
+                </span>
+                <span class="param-group">
+                  <span class="param-label">Max:</span>
                   <input
                     class="float-param-max small-number-input"
                     type="number"
@@ -527,7 +549,7 @@
                     value={param.type.includes("FloatShaderParam") ? (param.max || 1.0) : 1.0}
                     on:change={floatParamMaxChanged}
                   />
-                </b>
+                </span>
                 <input
                   class="float-param-slider"
                   type="range"
@@ -537,7 +559,7 @@
                   value={param.default || 1.0}
                   on:input={floatParamSliderChanged}
                 />
-              </div>
+              {/if}
               <button
                 on:click={deleteParam}
                 class="delete-param"
@@ -545,67 +567,122 @@
             </li>
           {/each}
         </ol>
+        </div>
       </div>
-      <div id="editorWrapper"></div>
+
+      <!-- Code Editor Section -->
+      <div class="control-panel">
+        <div class="panel-content" style="padding: 0;">
+          <div id="editorWrapper"></div>
+        </div>
+      </div>
     </div>
 
     <!-- TEMPLATE SHADER LIST -->
     <div class="tab hidden" id="templateShadersTab">
-      <ul>
-        {#if Object.keys(firebaseState.templateShaders || {}).length == 0}
-          <p>No template shaders found.</p>
-        {:else}
-          {#each Object.entries(firebaseState.templateShaders || {}).sort(([k,v]) => k) as [name, shaderData]}
-            <li><button on:click={loadShader(name, shaderData)}>{name}</button>
-          {/each}
-        {/if}
-      </ul>
+      <div class="control-panel">
+        <div class="panel-header">Template Shaders</div>
+        <div class="panel-content">
+          {#if Object.keys(firebaseState.templateShaders || {}).length == 0}
+            <p class="empty-state">No template shaders found.</p>
+          {:else}
+            <div class="shader-grid">
+              {#each Object.entries(firebaseState.templateShaders || {}).sort(([k,v]) => k) as [name, shaderData]}
+                <button class="shader-card" on:click={loadShader(name, shaderData)}>
+                  <span class="shader-name">{name}</span>
+                </button>
+              {/each}
+            </div>
+          {/if}
+        </div>
+      </div>
     </div>
 
     <!-- MY SHADER LIST -->
     <div class="tab hidden" id="userShadersTab">
-      <ul>
-        {#if Object.keys(firebaseState.userShaders || {}).length == 0}
-          <p>No saved shaders found.</p>
-        {:else}
-          {#each Object.entries(firebaseState.userShaders || {}) as [name, shaderData]}
-            <li><button on:click={loadShader(name, shaderData)}>{name} ({shaderData.isPublic ? "Public": "Private"})</button>
-          {/each}
-        {/if}
-      </ul>
+      <div class="control-panel">
+        <div class="panel-header">My Shaders</div>
+        <div class="panel-content">
+          {#if Object.keys(firebaseState.userShaders || {}).length == 0}
+            <p class="empty-state">No saved shaders found.</p>
+          {:else}
+            <div class="shader-grid">
+              {#each Object.entries(firebaseState.userShaders || {}) as [name, shaderData]}
+                <button class="shader-card" on:click={loadShader(name, shaderData)}>
+                  <span class="shader-name">{name}</span>
+                  <span class="shader-badge {shaderData.isPublic ? 'public' : 'private'}">
+                    {shaderData.isPublic ? "Public" : "Private"}
+                  </span>
+                </button>
+              {/each}
+            </div>
+          {/if}
+        </div>
+      </div>
     </div>
 
     <!-- DISCOVER SHADER LIST -->
     <div class="tab hidden" id="discoverShadersTab">
-      {#if discoverUserUid}
-        <button on:click={unselectDiscoverUser}>Back to user list</button>
-        <ul>
-          {#if Object.keys(firebaseState.discoverShaders[discoverUserUid] || {}).length == 0}
-            <p>No saved shaders found.</p>
-          {:else}
-            <br>
+      <div class="control-panel">
+        {#if discoverUserUid}
+          <div class="panel-header">
+            <span>User Shaders</span>
+            <button on:click={unselectDiscoverUser} class="back-btn">← Back to Users</button>
+          </div>
+          <div class="panel-content">
             {#if Object.keys(firebaseState.discoverShaders[discoverUserUid] || {}).length == 0}
-              <p> This user has no public shaders </p>
+              <p class="empty-state">This user has no public shaders.</p>
             {:else}
-              {#each Object.entries(firebaseState.discoverShaders[discoverUserUid] || {}) as [name, shaderData]}
-                <li><button on:click={loadShader(name, shaderData)}>{name}</button>
-              {/each}
+              <div class="shader-grid">
+                {#each Object.entries(firebaseState.discoverShaders[discoverUserUid] || {}) as [name, shaderData]}
+                  <button class="shader-card" on:click={loadShader(name, shaderData)}>
+                    <span class="shader-name">{name}</span>
+                  </button>
+                {/each}
+              </div>
             {/if}
-          {/if}
-        </ul>
-      {:else}
-        <ul>
-          {#if (firebaseState.userList?.length || 0) == 0}
-            <p> No other users have created public shaders. So sad!</p>
-          {:else}
-            {#each (firebaseState.userList || []) as userInfo}
-              {#if userInfo.publicShadersCount > 0}
-                <li><button on:click={selectDiscoverUser(userInfo.uid)}>{userInfo.name}</button>
-              {/if}
-            {/each}
-          {/if}
-        </ul>
-      {/if}
+          </div>
+        {:else}
+          <div class="panel-header">Discover Users</div>
+          <div class="panel-content">
+            {#if (firebaseState.userList?.length || 0) == 0}
+              <p class="empty-state">No other users have created public shaders yet.</p>
+            {:else}
+              <div class="shader-grid">
+                {#each (firebaseState.userList || []) as userInfo}
+                  {#if userInfo.publicShadersCount > 0}
+                    <button class="shader-card user-card" on:click={selectDiscoverUser(userInfo.uid)}>
+                      <span class="shader-name">{userInfo.name}</span>
+                      <span class="shader-badge public">{userInfo.publicShadersCount} shaders</span>
+                    </button>
+                  {/if}
+                {/each}
+              </div>
+            {/if}
+          </div>
+        {/if}
+      </div>
+    </div>
+
+    <!-- ABOUT TAB -->
+    <div class="tab hidden" id="aboutTab">
+      <div class="control-panel">
+        <div class="panel-content">
+          <div class="about-content">
+            <p>Created by <a href="https://maxpleaner.com" target="_blank" rel="noopener noreferrer">Max Pleaner</a></p>
+
+            <p>
+              <a href="https://github.com/maxpleaner/ShaderWeb" target="_blank" rel="noopener noreferrer">View source code on GitHub</a>
+            </p>
+
+            <p>
+              This site was originally intended to feed camera effects into an Android/iOS app.
+              That project remains incomplete. If you're interested in building such an application,
+              please feel free to contact me.
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
 
   </div>
@@ -624,35 +701,175 @@
   }
 
   :global(#page) {
-    max-width: 1400px;
+    max-width: 800px;
     margin: 0 auto;
-    padding: 16px;
+    padding: 20px;
   }
 
   :global(hr) {
     border: none;
-    border-top: 1px solid #333;
-    margin: 16px 0;
+    border-top: 1px solid #2a2a2a;
+    margin: 20px 0;
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.03);
+  }
+
+  /* Control Panel Structure */
+  :global(.control-panel) {
+    background: linear-gradient(180deg, #161616 0%, #121212 100%);
+    border: 1px solid #2a2a2a;
+    border-radius: 10px;
+    margin-bottom: 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+    max-width: 800px;
+  }
+
+  :global(.panel-header) {
+    background: linear-gradient(180deg, #1e1e1e 0%, #1a1a1a 100%);
+    padding: 14px 20px;
+    border-bottom: 1px solid #2a2a2a;
+    font-weight: 600;
+    font-size: 14px;
+    color: #f0f0f0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  :global(.panel-content) {
+    padding: 20px;
+  }
+
+  :global(.form-row) {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  :global(.form-row:last-child) {
+    margin-bottom: 0;
+  }
+
+  :global(.form-row label) {
+    font-weight: 500;
+    min-width: 60px;
+    color: #d0d0d0;
+  }
+
+  :global(.checkbox-group) {
+    display: flex;
+    gap: 20px;
+    flex: 1;
+  }
+
+  :global(.checkbox-group label) {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    min-width: auto;
+  }
+
+  :global(.text-link) {
+    font-size: 13px;
+    margin-left: auto;
+  }
+
+  :global(.button-row) {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  /* Shader Grid Layout */
+  :global(.shader-grid) {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
+  }
+
+  :global(.shader-card) {
+    background: linear-gradient(180deg, #1e1e1e 0%, #1a1a1a 100%);
+    border: 1px solid #2a2a2a;
+    border-radius: 8px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    text-align: left;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  }
+
+  :global(.shader-card:hover) {
+    background: linear-gradient(180deg, #252525 0%, #202020 100%);
+    border-color: #3a3a3a;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    transform: translateY(-2px);
+  }
+
+  :global(.shader-name) {
+    font-weight: 500;
+    font-size: 14px;
+    color: #f0f0f0;
+  }
+
+  :global(.shader-badge) {
+    font-size: 11px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    display: inline-block;
+    font-weight: 500;
+  }
+
+  :global(.shader-badge.public) {
+    background: rgba(74, 158, 255, 0.15);
+    color: #4a9eff;
+    border: 1px solid rgba(74, 158, 255, 0.3);
+  }
+
+  :global(.shader-badge.private) {
+    background: rgba(255, 193, 7, 0.15);
+    color: #ffc107;
+    border: 1px solid rgba(255, 193, 7, 0.3);
+  }
+
+  :global(.empty-state) {
+    text-align: center;
+    color: #888;
+    padding: 40px 20px;
+    font-size: 14px;
   }
 
   :global(button) {
-    background: #1a1a1a;
+    background: linear-gradient(180deg, #1e1e1e 0%, #1a1a1a 100%);
     color: #e0e0e0;
     border: 1px solid #333;
-    padding: 6px 12px;
-    border-radius: 4px;
+    padding: 9px 18px;
+    border-radius: 6px;
     cursor: pointer;
     font-size: 13px;
-    transition: all 0.2s;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05);
   }
 
   :global(button:hover) {
-    background: #2a2a2a;
+    background: linear-gradient(180deg, #2a2a2a 0%, #252525 100%);
     border-color: #555;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    transform: translateY(-1px);
   }
 
   :global(button:active) {
-    transform: translateY(1px);
+    transform: translateY(0px);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  }
+
+  :global(.back-btn) {
+    font-size: 12px;
+    padding: 6px 12px;
   }
 
   :global(input[type="text"]),
@@ -661,9 +878,11 @@
     background: #1a1a1a;
     color: #e0e0e0;
     border: 1px solid #333;
-    padding: 6px 8px;
-    border-radius: 4px;
+    padding: 7px 10px;
+    border-radius: 6px;
     font-size: 13px;
+    transition: all 0.2s ease;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
   }
 
   :global(input[type="text"]:focus),
@@ -671,103 +890,156 @@
   :global(select:focus) {
     outline: none;
     border-color: #4a9eff;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3), 0 0 0 3px rgba(74, 158, 255, 0.15);
+  }
+
+  :global(input[type="text"]:hover),
+  :global(input[type="number"]:hover),
+  :global(select:hover) {
+    border-color: #444;
   }
 
   :global(input[type="checkbox"]) {
     accent-color: #4a9eff;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
   }
 
   :global(a) {
     color: #4a9eff;
     text-decoration: none;
+    transition: color 0.2s ease;
   }
 
   :global(a:hover) {
+    color: #6ab0ff;
     text-decoration: underline;
   }
 
   :global(#shader-name) {
-    width: 200px;
-    margin-right: 8px;
+    width: 300px;
   }
 
   :global(#tab-nav) {
     display: flex;
-    gap: 8px;
-    margin-bottom: 16px;
+    gap: 10px;
+    margin-bottom: 0;
+    padding: 6px;
+    background: linear-gradient(180deg, #161616 0%, #121212 100%);
+    border-radius: 10px;
+    border: 1px solid #2a2a2a;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+    max-width: 800px;
+    flex-wrap: wrap;
   }
 
   :global(#canvas) {
-    border: 1px solid #333;
-    border-radius: 4px;
-    margin-bottom: 16px;
+    border: 1px solid #2a2a2a;
+    border-radius: 10px;
+    margin-bottom: 0;
     background: #000;
-  }
-
-  :global(#editorWrapper) {
-    border: 1px solid #333;
-    border-radius: 4px;
-    margin-top: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.03);
+    max-width: 800px;
+    width: 100%;
+    aspect-ratio: 4 / 3;
     overflow: hidden;
   }
 
-  :global(#params) {
-    background: #141414;
-    border: 1px solid #333;
-    border-radius: 4px;
-    padding: 12px;
-    margin-top: 16px;
+  :global(#canvas canvas) {
+    display: block;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain;
   }
 
-  :global(#params p) {
-    margin: 0 0 8px 0;
-    font-weight: 600;
+  :global(#editorWrapper) {
+    border: none;
+    border-radius: 6px;
+    overflow: hidden;
+    min-height: 400px;
+    width: 100%;
+  }
+
+  :global(#editorWrapper .cm-editor) {
+    width: 100%;
   }
 
   :global(#params ol) {
-    margin: 12px 0 0 0;
-    padding-left: 20px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
   }
 
   :global(#params li) {
     margin-bottom: 12px;
-    padding: 8px;
-    background: #1a1a1a;
-    border: 1px solid #333;
-    border-radius: 4px;
+    padding: 16px;
+    background: linear-gradient(180deg, #1e1e1e 0%, #1a1a1a 100%);
+    border: 1px solid #2a2a2a;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    transition: all 0.2s ease;
+  }
+
+  :global(#params li:hover) {
+    border-color: #3a3a3a;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
+  }
+
+  :global(#params li:last-child) {
+    margin-bottom: 0;
+  }
+
+  :global(.shaderParam) {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
   }
 
   :global(.shaderParam input),
   :global(.shaderParam select) {
-    margin-right: 6px;
-    margin-bottom: 4px;
-  }
-
-  :global(.shaderParam .paramName) {
-    width: 120px;
-    font-weight: 600;
-  }
-
-  :global(.float-param-slider) {
-    width: 150px;
-    vertical-align: middle;
-    margin-left: 8px;
-  }
-
-  :global(ul) {
-    list-style: none;
-    padding: 0;
     margin: 0;
   }
 
-  :global(ul li) {
-    margin-bottom: 8px;
+  :global(.shaderParam .paramName) {
+    width: 160px;
+    font-weight: 600;
   }
 
-  :global(ul button) {
-    width: 100%;
-    text-align: left;
-    padding: 8px 12px;
+  :global(.shaderParam .type-select) {
+    width: 120px;
+  }
+
+  :global(.shaderOptions.inline-block) {
+    display: contents;
+  }
+
+  :global(.shaderOptions b) {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: #b0b0b0;
+    font-weight: 500;
+  }
+
+  :global(.param-group) {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+  }
+
+  :global(.param-label) {
+    font-size: 12px;
+    color: #b0b0b0;
+    font-weight: 500;
+  }
+
+  :global(.float-param-slider) {
+    width: 200px;
+    cursor: pointer;
   }
 
   .hidden {
@@ -783,42 +1055,129 @@
   }
 
   .small-number-input {
-    width: 60px;
+    width: 70px;
   }
 
   .nav-btn {
-    flex: 1;
-    max-width: 200px;
+    flex: 0 0 auto;
+    font-weight: 500;
   }
 
   .nav-btn.selected {
-    background: #2a2a2a;
+    background: linear-gradient(180deg, #2a3a4a 0%, #1e2e3e 100%);
     border-color: #4a9eff;
     color: #4a9eff;
+    box-shadow: 0 3px 8px rgba(74, 158, 255, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
   }
 
   :global(#login),
   :global(#logout) {
-    margin-left: 8px;
+    flex: 0 0 auto;
+    font-weight: 500;
+  }
+
+  :global(.about-content) {
+    max-width: 600px;
+    line-height: 1.8;
+  }
+
+  :global(.about-content p) {
+    margin: 16px 0;
+  }
+
+  :global(.about-content p:first-child) {
+    margin-top: 0;
+  }
+
+  :global(.about-content p:last-child) {
+    margin-bottom: 0;
   }
 
   :global(.cm-editor) {
-    background: #1a1a1a;
+    background: #1e1e1e;
   }
 
-  :global(.add-param),
-  :global(.delete-param) {
-    font-size: 12px;
-    padding: 4px 8px;
+  :global(.cm-editor .cm-gutters) {
+    background: #252525;
+    border-right: 1px solid #333;
+  }
+
+  :global(.cm-editor .cm-activeLineGutter) {
+    background: #2a2a2a;
+  }
+
+  :global(.cm-editor .cm-lineNumbers .cm-gutterElement) {
+    color: #858585;
+  }
+
+  :global(.param-header-row) {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  :global(.param-description) {
+    font-size: 13px;
+    color: #888;
+    font-style: italic;
   }
 
   :global(.delete-param) {
-    background: #2a1a1a;
+    background: linear-gradient(180deg, #2a1a1a 0%, #251515 100%);
     border-color: #553333;
+    font-size: 12px;
+    padding: 6px 12px;
+    margin-left: auto;
   }
 
   :global(.delete-param:hover) {
-    background: #3a1a1a;
+    background: linear-gradient(180deg, #3a1a1a 0%, #351515 100%);
     border-color: #773333;
+    box-shadow: 0 3px 6px rgba(119, 51, 51, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  }
+
+  :global(#save) {
+    background: linear-gradient(180deg, #1a2e1a 0%, #152515 100%);
+    border-color: #335533;
+  }
+
+  :global(#save:hover) {
+    background: linear-gradient(180deg, #2a3e2a 0%, #253525 100%);
+    border-color: #447744;
+    box-shadow: 0 3px 6px rgba(68, 119, 68, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  }
+
+  :global(#update) {
+    background: linear-gradient(180deg, #1a2a3a 0%, #152530 100%);
+    border-color: #335577;
+  }
+
+  :global(#update:hover) {
+    background: linear-gradient(180deg, #2a3a4a 0%, #253540 100%);
+    border-color: #447799;
+    box-shadow: 0 3px 6px rgba(68, 119, 153, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  }
+
+  :global(#delete) {
+    background: linear-gradient(180deg, #2a1a1a 0%, #251515 100%);
+    border-color: #553333;
+  }
+
+  :global(#delete:hover) {
+    background: linear-gradient(180deg, #3a1a1a 0%, #351515 100%);
+    border-color: #773333;
+    box-shadow: 0 3px 6px rgba(119, 51, 51, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  }
+
+  :global(#clear) {
+    background: linear-gradient(180deg, #2a2a1a 0%, #252515 100%);
+    border-color: #555533;
+  }
+
+  :global(#clear:hover) {
+    background: linear-gradient(180deg, #3a3a2a 0%, #353525 100%);
+    border-color: #777755;
+    box-shadow: 0 3px 6px rgba(119, 119, 85, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.08);
   }
 </style>

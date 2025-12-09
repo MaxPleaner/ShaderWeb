@@ -35,7 +35,7 @@
     pFive = _pFive
     pFive.setup = ->
       aspect_ratio = [4, 3]
-      scale = 150
+      scale = 200
       size = aspect_ratio.map (val) => val * scale
 
       canvas = pFive.createCanvas(size[0], size[1], pFive.WEBGL)

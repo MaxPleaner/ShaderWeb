@@ -710,20 +710,6 @@
     padding: 20px;
   }
 
-  @media (max-width: 600px) {
-    :global(#page) {
-      padding: 10px;
-    }
-
-    :global(.control-panel) {
-      width: 100% !important;
-      max-width: 100% !important;
-    }
-
-    :global(#canvas) {
-      max-width: 100%;
-    }
-  }
 
   :global(hr) {
     border: none;
@@ -1307,5 +1293,64 @@
     background: linear-gradient(180deg, #3a3a2a 0%, #353525 100%);
     border-color: #777755;
     box-shadow: 0 3px 6px rgba(119, 119, 85, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  }
+
+  /* Hard stop for small screens so nothing overflows */
+  @media (max-width: 768px) {
+    :global(body) {
+      overflow-x: hidden;
+    }
+
+    :global(#page) {
+      padding: 12px;
+      max-width: 100%;
+    }
+
+    :global(#tabs),
+    :global(#tab-nav) {
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    /* Let flex/grid children shrink instead of forcing overflow */
+    :global(.controls-column),
+    :global(.control-panel),
+    :global(.panel-content),
+    :global(#canvas),
+    :global(#editorWrapper) {
+      max-width: 100%;
+      width: 100%;
+      min-width: 0;
+      box-sizing: border-box;
+    }
+
+    :global(#tab-nav) {
+      justify-content: stretch;
+    }
+
+    :global(.button-row) {
+      width: 100%;
+      justify-content: center;
+    }
+
+    :global(#cameraTab) {
+      max-width: 100%;
+      width: 100%;
+      grid-template-columns: 1fr;
+      grid-template-rows: auto;
+      gap: 12px;
+      justify-items: stretch;
+    }
+
+    /* Allow lists and inputs to wrap without pushing layout */
+    :global(#params li),
+    :global(.shaderParam) {
+      min-width: 0;
+    }
+
+    :global(.shaderParam input),
+    :global(.shaderParam select) {
+      max-width: 100%;
+    }
   }
 </style>

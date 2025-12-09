@@ -710,6 +710,12 @@
     padding: 20px;
   }
 
+  @media (max-width: 600px) {
+    :global(#page) {
+      padding: 10px;
+    }
+  }
+
   :global(hr) {
     border: none;
     border-top: 1px solid #2a2a2a;
@@ -743,6 +749,16 @@
 
   :global(.panel-content) {
     padding: 20px;
+  }
+
+  @media (max-width: 600px) {
+    :global(.panel-content) {
+      padding: 12px;
+    }
+
+    :global(#params li) {
+      padding: 12px;
+    }
   }
 
   :global(.form-row) {
@@ -939,6 +955,19 @@
     justify-content: center;
   }
 
+  @media (max-width: 600px) {
+    :global(#tab-nav) {
+      gap: 6px;
+      padding: 4px;
+      margin-bottom: 10px;
+    }
+
+    :global(.nav-btn) {
+      font-size: 12px;
+      padding: 7px 14px;
+    }
+  }
+
   :global(#cameraTab) {
     display: grid;
     grid-template-columns: 800px 800px;
@@ -1035,7 +1064,7 @@
   }
 
   :global(#params li) {
-    margin-bottom: 12px;
+    margin-bottom: 0;
     padding: 16px;
     background: linear-gradient(180deg, #1e1e1e 0%, #1a1a1a 100%);
     border: 1px solid #2a2a2a;

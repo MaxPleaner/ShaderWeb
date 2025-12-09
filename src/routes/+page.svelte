@@ -360,7 +360,7 @@
     {#if firebaseState.user}
       <button class="nav-btn" on:click={initLogout} id="logout">Logout ({firebaseState.user.email})</button>
     {:else}
-      <button class="nav-btn" on:click={initLogin} id="login">Login</button>
+      <button class="nav-btn" on:click={initLogin} id="login">Login (to save & share)</button>
     {/if}
   </div>
 
@@ -370,47 +370,49 @@
     <div class="tab hidden" id="cameraTab">
       <div id="canvas"></div>
 
-      <!-- Shader Metadata Section -->
-      <div class="control-panel">
-        <div class="panel-content">
-          <div class="form-row">
-            <label for="shader-name">Name</label>
-            <input id="shader-name" type="text" placeholder="Enter shader name" />
-            <div class="checkbox-group">
-              <label>
-                <input type="checkbox" id="isPublic" checked={isShaderPublic} value="Public" />
-                <span>Public</span>
-              </label>
-              {#if firebaseState.isAdmin}
+      <div class="controls-column">
+        <!-- Shader Metadata Section -->
+        <div class="control-panel">
+          <div class="panel-content">
+            <div class="form-row">
+              <label for="shader-name">Name</label>
+              <input id="shader-name" type="text" placeholder="Enter shader name" />
+              <div class="checkbox-group">
                 <label>
-                  <input type="checkbox" id="isTemplate" value="Template" />
-                  <span>Template</span>
+                  <input type="checkbox" id="isPublic" checked={isShaderPublic} value="Public" />
+                  <span>Public</span>
                 </label>
-              {/if}
+                {#if firebaseState.isAdmin}
+                  <label>
+                    <input type="checkbox" id="isTemplate" value="Template" />
+                    <span>Template</span>
+                  </label>
+                {/if}
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- Action Buttons Section -->
-      <div class="control-panel">
-        <div class="panel-content">
-          <div class="button-row">
-            <button on:click={updateButtonClick} id="update">Update Preview</button>
-            <button on:click={saveButtonClick} id="save">Save Shader</button>
-            <button on:click={deleteButtonClick} id="delete">Delete Shader</button>
-            <button on:click={clearShaderOnClick} id="clear">Clear Shader</button>
+        <!-- Action Buttons Section -->
+        <div class="control-panel">
+          <div class="panel-content">
+            <div class="button-row">
+              <button on:click={updateButtonClick} id="update">Update Preview</button>
+              <button on:click={saveButtonClick} id="save">Save Shader</button>
+              <button on:click={deleteButtonClick} id="delete">Delete Shader</button>
+              <button on:click={clearShaderOnClick} id="clear">Clear Shader</button>
+            </div>
           </div>
         </div>
-      </div>
-      <!-- EDITOR -->
-      <div id="params" class="control-panel">
-        <!-- PARAM EDITOR -->
-        <div class="panel-content">
-          <div class="param-header-row">
-            <button on:click={addParam}>Add Parameter</button>
-            <span class="param-description">Auto-defines a uniform in the shader</span>
-          </div>
+
+        <!-- Parameters -->
+        <div id="params" class="control-panel">
+          <!-- PARAM EDITOR -->
+          <div class="panel-content">
+            <div class="param-header-row">
+              <button on:click={addParam}>Add Parameter</button>
+              <span class="param-description">Auto-defines a uniform in the shader</span>
+            </div>
         <ol>
           {#each params as param}
             <li
@@ -566,20 +568,23 @@
               >Delete</button>
             </li>
           {/each}
-        </ol>
+          </ol>
+          </div>
         </div>
       </div>
 
-      <!-- Code Editor Section -->
-      <div class="control-panel">
-        <div class="panel-content" style="padding: 0;">
-          <div id="editorWrapper"></div>
+      <div class="controls-column">
+        <!-- Code Editor Section -->
+        <div class="control-panel">
+          <div class="panel-content" style="padding: 0;">
+            <div id="editorWrapper"></div>
+          </div>
         </div>
       </div>
     </div>
 
     <!-- TEMPLATE SHADER LIST -->
-    <div class="tab hidden" id="templateShadersTab">
+    <div class="tab hidden shader-list-tab" id="templateShadersTab">
       <div class="control-panel">
         <div class="panel-header">Template Shaders</div>
         <div class="panel-content">
@@ -599,7 +604,7 @@
     </div>
 
     <!-- MY SHADER LIST -->
-    <div class="tab hidden" id="userShadersTab">
+    <div class="tab hidden shader-list-tab" id="userShadersTab">
       <div class="control-panel">
         <div class="panel-header">My Shaders</div>
         <div class="panel-content">
@@ -622,7 +627,7 @@
     </div>
 
     <!-- DISCOVER SHADER LIST -->
-    <div class="tab hidden" id="discoverShadersTab">
+    <div class="tab hidden shader-list-tab" id="discoverShadersTab">
       <div class="control-panel">
         {#if discoverUserUid}
           <div class="panel-header">
@@ -665,7 +670,7 @@
     </div>
 
     <!-- ABOUT TAB -->
-    <div class="tab hidden" id="aboutTab">
+    <div class="tab hidden shader-list-tab" id="aboutTab">
       <div class="control-panel">
         <div class="panel-content">
           <div class="about-content">
@@ -701,7 +706,6 @@
   }
 
   :global(#page) {
-    max-width: 800px;
     margin: 0 auto;
     padding: 20px;
   }
@@ -722,6 +726,7 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
     overflow: hidden;
     max-width: 800px;
+    width: fit-content;
   }
 
   :global(.panel-header) {
@@ -924,14 +929,72 @@
   :global(#tab-nav) {
     display: flex;
     gap: 10px;
-    margin-bottom: 0;
+    margin: 0 auto 0 auto;
     padding: 6px;
     background: linear-gradient(180deg, #161616 0%, #121212 100%);
     border-radius: 10px;
     border: 1px solid #2a2a2a;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
-    max-width: 800px;
     flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  :global(#cameraTab) {
+    display: grid;
+    grid-template-columns: 800px 800px;
+    grid-template-rows: 600px auto;
+    gap: 20px;
+    max-width: 1640px;
+    margin: 0 auto;
+    justify-content: center;
+  }
+
+  @media (max-width: 1199px) {
+    :global(#cameraTab) {
+      grid-template-columns: 1fr;
+      justify-items: center;
+    }
+  }
+
+  :global(.shader-list-tab .control-panel) {
+    max-width: none;
+    width: 100%;
+  }
+
+  :global(#canvas) {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  :global(.controls-column) {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    max-width: 800px;
+    align-items: center;
+  }
+
+  :global(#cameraTab > .controls-column:nth-child(2)) {
+    grid-column: 2;
+    grid-row: 1 / 3;
+  }
+
+  :global(#cameraTab > .controls-column:nth-child(3)) {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  @media (max-width: 1199px) {
+    :global(.controls-column) {
+      grid-column: 1 !important;
+      grid-row: auto !important;
+    }
+  }
+
+  :global(.control-panel) {
+    width: 100%;
+    max-width: 800px;
   }
 
   :global(#canvas) {
@@ -1042,16 +1105,16 @@
     cursor: pointer;
   }
 
-  .hidden {
-    display: none;
+  :global(.hidden) {
+    display: none !important;
   }
 
   .inline-block {
     display: inline-block;
   }
 
-  .hidden.inline-block {
-    display: none;
+  :global(.hidden.inline-block) {
+    display: none !important;
   }
 
   .small-number-input {

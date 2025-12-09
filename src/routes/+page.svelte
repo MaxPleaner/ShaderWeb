@@ -929,7 +929,7 @@
   :global(#tab-nav) {
     display: flex;
     gap: 10px;
-    margin: 0 auto 0 auto;
+    margin: 0 auto 20px auto;
     padding: 6px;
     background: linear-gradient(180deg, #161616 0%, #121212 100%);
     border-radius: 10px;
@@ -949,7 +949,7 @@
     justify-content: center;
   }
 
-  @media (max-width: 1199px) {
+  @media (max-width: 1679px) {
     :global(#cameraTab) {
       grid-template-columns: 1fr;
       justify-items: center;
@@ -969,7 +969,7 @@
   :global(.controls-column) {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 0;
     width: 100%;
     max-width: 800px;
     align-items: center;
@@ -985,7 +985,7 @@
     grid-row: 2;
   }
 
-  @media (max-width: 1199px) {
+  @media (max-width: 1679px) {
     :global(.controls-column) {
       grid-column: 1 !important;
       grid-row: auto !important;
